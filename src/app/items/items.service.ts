@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ItemsStore, Item } from '../common/item.model';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { AddItemsAction, getItems, DeleteItemAction, CreateItemAction } from '../common/items.store';
+import { AddItemsAction, getItems, DeleteItemAction, CreateItemAction, UpdateItemAction } from '../common/items.store';
 
 @Injectable()
 export class ItemsService {
@@ -24,5 +24,9 @@ export class ItemsService {
 
   createItem(item: Item) {
     this.store.dispatch(new CreateItemAction(item));
+  }
+
+  updateItem(item: Item) {
+    this.store.dispatch(new UpdateItemAction(item));
   }
 }

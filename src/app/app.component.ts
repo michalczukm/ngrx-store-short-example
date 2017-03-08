@@ -45,7 +45,12 @@ export class AppComponent {
   }
 
   saveItem(item: Item) {
-    this.itemsService.createItem(item);
+    if (item.id) {
+      this.itemsService.updateItem(item);
+    } else {
+      this.itemsService.createItem(item);
+    }
+
     this.resetItem();
   }
 }
