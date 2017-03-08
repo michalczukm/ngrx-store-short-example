@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Item, ItemsStore } from '../../common/item.model';
 import { Store } from '@ngrx/store';
 import { SelectedItemAction } from '../../common/selected-item.store';
@@ -10,18 +10,25 @@ import { SelectedItemAction } from '../../common/selected-item.store';
       <li *ngFor="let item of items">
         <p>
           {{item.id}}: {{item.name}}
-          <button (click)="openDetails(item)">Details</button>
+          <button (click)="select(item)">Details</button>
+          <button (click)="delete(item)">Delete</button>
         </p>
       </li>
     </ul>`
 })
 export class ItemsListComponent {
   @Input() items: Item[];
+  @Output() selected = new EventEmitter<Item>();
+  @Output() deleted = new EventEmitter<Item>();
 
   constructor(private store: Store<ItemsStore>) {
   }
 
-  openDetails(item: Item) {
-    this.store.dispatch(new SelectedItemAction(item));
+  select(item: Item) {
+    this.selected.emit(item);
+  }
+
+  delete(item: Item) {
+    this.deleted.emit(item);
   }
 }

@@ -42,7 +42,13 @@ export const items = (state: Item[] = [], action: Actions | {type, payload}): It
     case 'ADD_ITEMS':
       return action.payload;
     case 'CREATE_ITEM':
-      return [...state, action.payload];
+      return [
+        ...state,
+        Object.assign(
+          {},
+          action.payload,
+          {id: state.map(i => i.id).reduce((p, c) => (p > c) ? p : c) + 1}
+        )];
     case 'UPDATE_ITEM':
       return state.map(
         item => item.id === action.payload.id
@@ -56,4 +62,5 @@ export const items = (state: Item[] = [], action: Actions | {type, payload}): It
   }
 };
 
+// queries
 export const getItems = (store: ItemsStore) => store.items;

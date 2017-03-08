@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ItemsStore, Item } from '../common/item.model';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { AddItemsAction, getItems } from '../common/items.store';
+import { AddItemsAction, getItems, DeleteItemAction, CreateItemAction } from '../common/items.store';
 
 @Injectable()
 export class ItemsService {
@@ -16,5 +16,13 @@ export class ItemsService {
     const items = [{id: 1, name: 'Foo'}, {id: 2, name: 'Bar'}] as Item[];
 
     this.store.dispatch(new AddItemsAction(items));
+  }
+
+  deleteItem(item: Item) {
+    this.store.dispatch(new DeleteItemAction(item));
+  }
+
+  createItem(item: Item) {
+    this.store.dispatch(new CreateItemAction(item));
   }
 }

@@ -3,15 +3,21 @@ import { ItemsService } from './items/items.service';
 import { ItemsStore, Item } from './common/item.model';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import { SelectedItemAction } from './common/selected-item.store';
 
 @Component({
   selector: 'app-root',
   template: `
   <div>
-    <app-items-list [items]="items$ | async"></app-items-list>
+    <app-items-list [items]="items$ | async" 
+        (selected)="selectItem($event)" 
+        (deleted)="deleteItem($event)"></app-items-list>
   </div>
   <div>
-    <app-item-detail [item]="item$ | async"></app-item-detail>  
+    <app-item-detail [item]="item$ | async"
+        (canceled)="resetItem()"
+        (saved)="saveItem($event)">      
+  </app-item-detail>  
   </div>
   `
 })
@@ -24,5 +30,22 @@ export class AppComponent {
     this.item$ = this.store.select('selectedItem');
 
     this.itemsService.loadItems();
+  }
+
+  selectItem(item: Item) {
+      this.store.dispatch(new SelectedItemAction(item));
+  }
+
+  deleteItem(item: Item) {
+    this.itemsService.deleteItem(item);
+  }
+
+  resetItem() {
+    this.store.dispatch(new SelectedItemAction( {} as Item));
+  }
+
+  saveItem(item: Item) {
+    this.itemsService.createItem(item);
+    this.resetItem();
   }
 }
