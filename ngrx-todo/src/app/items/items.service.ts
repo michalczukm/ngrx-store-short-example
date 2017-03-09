@@ -3,6 +3,10 @@ import { ItemsStore, Item } from '../common/item.model';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { AddItemsAction, getItems, DeleteItemAction, CreateItemAction, UpdateItemAction } from '../common/items.store';
+import { Headers, Http } from '@angular/http';
+
+const BASE_URL = 'http://localhost:3000/items/';
+const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
 
 @Injectable()
 export class ItemsService {
