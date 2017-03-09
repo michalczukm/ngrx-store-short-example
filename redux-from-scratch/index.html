@@ -5,21 +5,23 @@
     <title>Jquery todo-list</title>
 </head>
 <body>
-    <div style="border: 1px solid green">
-        <h2>Todo list</h2>
-        <ul id="todo-list">
-        </ul>
-    </div>
+<div style="border: 1px solid green">
+    <h2>Todo list</h2>
+    <ul id="todo-list">
+    </ul>
+</div>
 
-    <br/>
+<br/>
 
-    <div style="border: 1px solid blue">
-        <h2>New todo item</h2>
-        <p>What:</p>
-        <input id="new-item" type="text" val="" />
-    </div>
+<div style="border: 1px solid blue">
+    <h2>New todo item</h2>
+    <p>What:</p>
+    <input id="new-item" type="text" val=""/>
+    <button type="submit" onclick="addItem(event)">ADD</button>
+</div>
 </body>
 
 <script src="node_modules/jquery/dist/jquery.js"></script>
+<script src="node_modules/rxjs/bundles/Rx.js"></script>
 <script src="index.js"></script>
 </html>
