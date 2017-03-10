@@ -43,21 +43,40 @@ const reducer = (state, action) => {
 const initialState = [];
 
 // store
-const store$ = action$.startWith(initialState).scan(reducer);
+const store$ = action$
+    .flatMap((action) => action instanceof Rx.Observable ? action : Rx.Observable.from([action]))
+    .startWith(initialState).scan(reducer);
 
 // action dispatcher
 const actionDispatcher = (func) => (...args) => {
-    return action$.next(func(...args));
+    const action = func.call(null, ...args);
+
+    action$.next(action);
+
+    if (action.payload instanceof Rx.Observable) {
+        action$.next(action.payload);
+    }
+
+    return action;
 };
 
 // actions
 const addItemAction = actionDispatcher((payload) => {
-    return { type: 'ADD_ITEM', payload };
+    return {type: 'ADD_ITEM', payload};
 });
 
 const loadItems = actionDispatcher(() => {
     return {
-        type: 'ITEMS_LOADED',
-        payload: Rx.Observable.from(['one', 'two', 'three'])
+        type: 'ITEMS_LOADING',
+        payload: Rx.Observable
+            .ajax({
+                url: 'http://localhost:3210/items',
+                crossDomain: true
+            })
+            .map(({response}) => response.map(x => x.name))
+            .map((items) => ({
+                type: 'ITEMS_LOADED',
+                payload: items
+            }))
     };
 });

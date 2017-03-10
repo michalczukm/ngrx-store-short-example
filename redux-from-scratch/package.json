@@ -1,6 +1,12 @@
 {
+  "scripts": {
+    "serve": "node node_modules/json-server/bin/index.js --watch server/db.json --port 3210"
+  },
   "dependencies": {
     "jquery": "^3.1.1",
     "rxjs": "^5.2.0"
+  },
+  "devDependencies": {
+    "json-server": "^0.9.6"
   }
 }
