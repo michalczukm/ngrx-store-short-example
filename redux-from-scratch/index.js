@@ -5,7 +5,7 @@ $(() => {
 
     store$.subscribe((state) => {
         $list.empty();
-        state.forEach((item) => {
+        state.items.forEach((item) => {
             $('<li/>').text(item).appendTo($list);
         });
     });
@@ -29,10 +29,20 @@ const action$ = new Rx.Subject();
 const reducer = (state, action) => {
     switch (action.type) {
         case 'ADD_ITEM': {
-            return [...state, action.payload];
+            return Object.assign({}, state, {
+                items: [...state, action.payload]
+           })
         }
         case 'ITEMS_LOADED': {
-            return action.payload;
+            return Object.assign({}, state, {
+                isLoading: false,
+                items: action.payload
+            });
+        }
+        case 'ITEMS_LOADING': {
+            return Object.assign({}, state, {
+                isLoading: true
+            });
         }
         default:
             return state;
@@ -40,7 +50,7 @@ const reducer = (state, action) => {
 };
 
 // initial state
-const initialState = [];
+const initialState = { items: [], isLoading: false };
 
 // store
 const store$ = action$
