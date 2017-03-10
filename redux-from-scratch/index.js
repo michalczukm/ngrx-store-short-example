@@ -3,8 +3,7 @@
 $(() => {
     let $list = $('#todo-list');
 
-    store$
-        .distinctUntilChanged((previous, current)=> previous.items === current.items)
+    store.getItems()
         .subscribe((state) => {
             $list.empty();
             state.items.forEach((item) => {
@@ -12,8 +11,7 @@ $(() => {
             });
         });
 
-    store$
-        .distinctUntilChanged((previous, current)=> previous.isLoading === current.isLoading)
+    store.getIsLoading()
         .subscribe((state) => {
             $('#load-indicator').toggle(state.isLoading)
         });
@@ -99,3 +97,10 @@ const loadItems = actionDispatcher(() => {
             }))
     };
 });
+
+const store = {
+    getItems: () => store$
+        .distinctUntilChanged((previous, current)=> previous.items === current.items),
+    getIsLoading: () => store$
+        .distinctUntilChanged((previous, current)=> previous.isLoading === current.isLoading)
+};
