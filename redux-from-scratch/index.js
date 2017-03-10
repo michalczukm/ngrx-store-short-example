@@ -10,7 +10,7 @@ $(() => {
         });
     });
 
-    loadItems(['one', 'two', 'three']);
+    loadItems();
 });
 
 const addItem = (event) => {
@@ -45,16 +45,19 @@ const initialState = [];
 // store
 const store$ = action$.startWith(initialState).scan(reducer);
 
-// action dispacher
-const actionDispacher = (func) => (...args) => {
+// action dispatcher
+const actionDispatcher = (func) => (...args) => {
     return action$.next(func(...args));
 };
 
 // actions
-const addItemAction = actionDispacher((payload) => {
+const addItemAction = actionDispatcher((payload) => {
     return { type: 'ADD_ITEM', payload };
 });
 
-const loadItems = actionDispacher((payload) => {
-    return { type: 'ITEMS_LOADED', payload };
+const loadItems = actionDispatcher(() => {
+    return {
+        type: 'ITEMS_LOADED',
+        payload: Rx.Observable.from(['one', 'two', 'three'])
+    };
 });
