@@ -9,6 +9,8 @@ $(() => {
             $('<li/>').text(item).appendTo($list);
         });
     });
+
+    loadItems(['one', 'two', 'three']);
 });
 
 const addItem = (event) => {
@@ -23,30 +25,36 @@ const addItem = (event) => {
 // actions stream
 const action$ = new Rx.Subject();
 
-// initial state
-const initialState = [];
-
 // reducer
 const reducer = (state, action) => {
     switch (action.type) {
         case 'ADD_ITEM': {
             return [...state, action.payload];
         }
+        case 'ITEMS_LOADED': {
+            return action.payload;
+        }
         default:
             return state;
     }
 };
+
+// initial state
+const initialState = [];
 
 // store
 const store$ = action$.startWith(initialState).scan(reducer);
 
 // action dispacher
 const actionDispacher = (func) => (...args) => {
-    action$.next(func(...args));
+    return action$.next(func(...args));
 };
 
 // actions
-const addItemAction = actionDispacher((payload) => ({
-    type: 'ADD_ITEM',
-    payload
-}));
+const addItemAction = actionDispacher((payload) => {
+    return { type: 'ADD_ITEM', payload };
+});
+
+const loadItems = actionDispacher((payload) => {
+    return { type: 'ITEMS_LOADED', payload };
+});
