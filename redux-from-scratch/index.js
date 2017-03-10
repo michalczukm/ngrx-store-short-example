@@ -3,12 +3,20 @@
 $(() => {
     let $list = $('#todo-list');
 
-    store$.subscribe((state) => {
-        $list.empty();
-        state.items.forEach((item) => {
-            $('<li/>').text(item).appendTo($list);
+    store$
+        .distinctUntilChanged((previous, current)=> previous.items === current.items)
+        .subscribe((state) => {
+            $list.empty();
+            state.items.forEach((item) => {
+                $('<li/>').text(item).appendTo($list);
+            });
         });
-    });
+
+    store$
+        .distinctUntilChanged((previous, current)=> previous.isLoading === current.isLoading)
+        .subscribe((state) => {
+            $('#load-indicator').toggle(state.isLoading)
+        });
 
     loadItems();
 });
@@ -30,8 +38,8 @@ const reducer = (state, action) => {
     switch (action.type) {
         case 'ADD_ITEM': {
             return Object.assign({}, state, {
-                items: [...state, action.payload]
-           })
+                items: [...state.items, action.payload]
+            })
         }
         case 'ITEMS_LOADED': {
             return Object.assign({}, state, {
@@ -50,7 +58,7 @@ const reducer = (state, action) => {
 };
 
 // initial state
-const initialState = { items: [], isLoading: false };
+const initialState = {items: [], isLoading: false};
 
 // store
 const store$ = action$
@@ -83,6 +91,7 @@ const loadItems = actionDispatcher(() => {
                 url: 'http://localhost:3210/items',
                 crossDomain: true
             })
+            .delay(new Date(Date.now() + 1000))
             .map(({response}) => response.map(x => x.name))
             .map((items) => ({
                 type: 'ITEMS_LOADED',

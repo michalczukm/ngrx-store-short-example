@@ -7,6 +7,10 @@
 <body>
 <div style="border: 1px solid green">
     <h2>Todo list</h2>
+    <div id="load-indicator" style="border: 1px solid violet; width: 50%">
+        <marquee>Loading...</marquee>
+        <marquee direction="right">Loading...</marquee>
+    </div>
     <ul id="todo-list">
     </ul>
 </div>
@@ -19,12 +23,8 @@
     <input id="new-item" type="text" val=""/>
     <button type="submit" onclick="addItem(event)">ADD</button>
 </div>
-</body>
 
-<div id="load-indicator" style="border: 1px solid violet; width: 50%">
-    <marquee>Loading...</marquee>
-    <marquee direction="right">Loading...</marquee>
-</div>
+</body>
 
 <script src="node_modules/jquery/dist/jquery.js"></script>
 <script src="node_modules/rxjs/bundles/Rx.js"></script>
